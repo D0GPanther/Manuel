@@ -54,6 +54,8 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.Schlaeger2 = new System.Windows.Forms.Panel();
+            this.radioButtonMultiplayer = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             this.panelFeld.SuspendLayout();
             this.SuspendLayout();
@@ -125,35 +127,35 @@
             // veryEasyToolStripMenuItem
             // 
             this.veryEasyToolStripMenuItem.Name = "veryEasyToolStripMenuItem";
-            this.veryEasyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.veryEasyToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.veryEasyToolStripMenuItem.Text = "very easy";
             this.veryEasyToolStripMenuItem.Click += new System.EventHandler(this.veryEasyToolStripMenuItem_Click);
             // 
             // easyToolStripMenuItem
             // 
             this.easyToolStripMenuItem.Name = "easyToolStripMenuItem";
-            this.easyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.easyToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.easyToolStripMenuItem.Text = "easy";
             this.easyToolStripMenuItem.Click += new System.EventHandler(this.easyToolStripMenuItem_Click);
             // 
             // normiToolStripMenuItem
             // 
             this.normiToolStripMenuItem.Name = "normiToolStripMenuItem";
-            this.normiToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.normiToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.normiToolStripMenuItem.Text = "normi";
             this.normiToolStripMenuItem.Click += new System.EventHandler(this.normiToolStripMenuItem_Click);
             // 
             // hardToolStripMenuItem
             // 
             this.hardToolStripMenuItem.Name = "hardToolStripMenuItem";
-            this.hardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hardToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.hardToolStripMenuItem.Text = "hard";
             this.hardToolStripMenuItem.Click += new System.EventHandler(this.hardToolStripMenuItem_Click);
             // 
             // painInTheAssToolStripMenuItem
             // 
             this.painInTheAssToolStripMenuItem.Name = "painInTheAssToolStripMenuItem";
-            this.painInTheAssToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.painInTheAssToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.painInTheAssToolStripMenuItem.Text = "pain in the ass";
             this.painInTheAssToolStripMenuItem.Click += new System.EventHandler(this.painInTheAssToolStripMenuItem_Click);
             // 
@@ -170,26 +172,27 @@
             // spielfeldToolStripMenuItem
             // 
             this.spielfeldToolStripMenuItem.Name = "spielfeldToolStripMenuItem";
-            this.spielfeldToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.spielfeldToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.spielfeldToolStripMenuItem.Text = "Spielfeld";
             this.spielfeldToolStripMenuItem.Click += new System.EventHandler(this.spielfeldToolStripMenuItem_Click);
             // 
             // schummelnToolStripMenuItem
             // 
             this.schummelnToolStripMenuItem.Name = "schummelnToolStripMenuItem";
-            this.schummelnToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.schummelnToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.schummelnToolStripMenuItem.Text = "Schummeln";
             this.schummelnToolStripMenuItem.Click += new System.EventHandler(this.schummelnToolStripMenuItem_Click);
             // 
             // bestenlisteDruckenToolStripMenuItem
             // 
             this.bestenlisteDruckenToolStripMenuItem.Name = "bestenlisteDruckenToolStripMenuItem";
-            this.bestenlisteDruckenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bestenlisteDruckenToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.bestenlisteDruckenToolStripMenuItem.Text = "Bestenliste drucken";
             this.bestenlisteDruckenToolStripMenuItem.Click += new System.EventHandler(this.bestenlisteDruckenToolStripMenuItem_Click);
             // 
             // panelFeld
             // 
+            this.panelFeld.Controls.Add(this.Schlaeger2);
             this.panelFeld.Controls.Add(this.Ball);
             this.panelFeld.Controls.Add(this.Schlaeger);
             this.panelFeld.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -269,11 +272,31 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Spielzeit:";
             // 
+            // Schlaeger2
+            // 
+            this.Schlaeger2.Location = new System.Drawing.Point(607, 114);
+            this.Schlaeger2.Name = "Schlaeger2";
+            this.Schlaeger2.Size = new System.Drawing.Size(14, 206);
+            this.Schlaeger2.TabIndex = 2;
+            // 
+            // radioButtonMultiplayer
+            // 
+            this.radioButtonMultiplayer.AutoSize = true;
+            this.radioButtonMultiplayer.Location = new System.Drawing.Point(344, 4);
+            this.radioButtonMultiplayer.Name = "radioButtonMultiplayer";
+            this.radioButtonMultiplayer.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonMultiplayer.TabIndex = 5;
+            this.radioButtonMultiplayer.TabStop = true;
+            this.radioButtonMultiplayer.Text = "Multiplayer";
+            this.radioButtonMultiplayer.UseVisualStyleBackColor = true;
+            this.radioButtonMultiplayer.CheckedChanged += new System.EventHandler(this.radioButtonMultiplayer_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 441);
+            this.Controls.Add(this.radioButtonMultiplayer);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.splitter1);
@@ -323,5 +346,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem schummelnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bestenlisteDruckenToolStripMenuItem;
+        private System.Windows.Forms.Panel Schlaeger2;
+        private System.Windows.Forms.RadioButton radioButtonMultiplayer;
     }
 }

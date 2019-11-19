@@ -46,7 +46,6 @@ namespace Pong
         {
             Close();
         }
-
         public Point LiefereWerte()
         {
             Point rueckgabe = new Point(0, 0);

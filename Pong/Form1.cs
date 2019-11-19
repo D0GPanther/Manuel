@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Microsoft.Win32;
 
+
 namespace Pong
 {
     public partial class Form1 : Form
@@ -35,6 +36,7 @@ namespace Pong
         int punkteMehr, punkteWeniger;
         int winkelZufall;
         int spielzeit;
+        bool multiplayer;
 
         public string xmlDateiname;
         int xmlBreite;
@@ -55,7 +57,8 @@ namespace Pong
             balllPosition.winkel = 0;
             punkteMehr = 1;
             punkteWeniger = -5;
-            winkelZufall = 5;
+            winkelZufall = 3;
+            multiplayer = false;
 
             xmlDateiname = System.IO.Path.ChangeExtension(Application.ExecutablePath, ".xml");
             xmlSchwierigkeit = 3;
@@ -104,34 +107,47 @@ namespace Pong
         void zeichneSpielfeld()
         {
             pinsel.Color = farbeFuerAlles;
-            zeichenflaeche.FillRectangle(pinsel, 0, 0, spielfeldMaxX, spielfeldLinienBreite);
-            zeichenflaeche.FillRectangle(pinsel, spielfeldMaxX, 0, spielfeldLinienBreite, spielfeldMaxY + spielfeldLinienBreite);
-            zeichenflaeche.FillRectangle(pinsel, 0, spielfeldMaxY, spielfeldMaxX, spielfeldLinienBreite);
+            zeichenflaeche.FillRectangle(pinsel, 0, 0, (spielfeldMaxX+2), spielfeldLinienBreite);
+            zeichenflaeche.FillRectangle(pinsel, spielfeldMaxX, 0, (spielfeldLinienBreite), spielfeldMaxY + spielfeldLinienBreite);
+            zeichenflaeche.FillRectangle(pinsel, 0, spielfeldMaxY, (spielfeldMaxX+2), spielfeldLinienBreite);
 
             pinsel.Color = Color.DarkSlateGray;
             zeichenflaeche.FillRectangle(pinsel, spielfeldMaxX / 2, spielfeldMinY, spielfeldLinienBreite, spielfeldMaxY - spielfeldLinienBreite);
         }
 
         void zeichneBall(Point position)
-        {
+        {            
             Ball.Location = position;
-            if ((position.X + 10) >= spielfeldMaxX)
-                balllPosition.richtungX = false;
+            if (multiplayer == false)
+            {
+                if ((position.X + 10) >= spielfeldMaxX)
+                    balllPosition.richtungX = false;
+            }
             if ((position.Y + 10) >= spielfeldMaxY)
                 balllPosition.richtungY = true;
-            else
-                if (position.Y <= spielfeldMinY)
+            
+            if (position.Y <= spielfeldMinY)
                 balllPosition.richtungY = false;
 
             Random zufall = new Random();
+
             if ((position.X == spielfeldMinX) && ((Schlaeger.Top <= position.Y) && (Schlaeger.Bottom >= position.Y)))
             {
                 if (balllPosition.richtungX == false)
                 {
                     zeichnePunkte(Convert.ToString(spielpunkte.VeraenderePunkte(punkteMehr)));
                 }
-
                 balllPosition.richtungX = true;
+                balllPosition.winkel = zufall.Next(winkelZufall);
+            }
+
+            if ((position.X+10 >= spielfeldMaxX) && ((Schlaeger2.Top <= position.Y) && (Schlaeger2.Bottom >= position.Y)))
+            {
+                if (balllPosition.richtungX == true)
+                {
+                    zeichnePunkte(Convert.ToString(spielpunkte.VeraenderePunkte(punkteMehr)));
+                }
+                balllPosition.richtungX = false;
                 balllPosition.winkel = zufall.Next(winkelZufall);
             }
 
@@ -142,12 +158,36 @@ namespace Pong
                 zeichneBall(new Point(spielfeldMinX, position.Y));
                 balllPosition.richtungX = true;
             }
+
+            if (position.X > spielfeldMaxX)
+            {
+                zeichnePunkte(Convert.ToString(spielpunkte.VeraenderePunkte(punkteWeniger)));
+                System.Threading.Thread.Sleep(500);
+                zeichneBall(new Point(spielfeldMaxX, position.Y));
+                balllPosition.richtungX = false;
+            }
         }
 
-        void zeichenSchlaeger(int Y)
+        void zeichenSchlaeger1(int Y)
         {
+            Schlaeger.Width = spielfeldLinienBreite;
+            Schlaeger.Height = schlaegergroesse;
+            Schlaeger.BackColor = farbeFuerAlles;
+            Schlaeger.Left = 2;
+
             if (((Y + schlaegergroesse) < spielfeldMaxY) && (Y > spielfeldMinY))
                 Schlaeger.Top = Y;
+        }
+
+        void zeichenSchlaeger2(int Y)
+        {
+            Schlaeger2.Width = spielfeldLinienBreite;
+            Schlaeger2.Height = schlaegergroesse;
+            Schlaeger2.BackColor = farbeFuerAlles;
+            Schlaeger2.Left = (spielfeldMaxX)-10;
+
+            if (((Y + schlaegergroesse) < spielfeldMaxY) && (Y > spielfeldMinY))
+                Schlaeger2.Top = Y;
         }
 
         private void panelFeld_Paint(object sender, PaintEventArgs e)
@@ -159,12 +199,13 @@ namespace Pong
         {
             Ball.Width = 16;
             Ball.Height = 16;
-            Schlaeger.Width = spielfeldLinienBreite;
-            Schlaeger.Height = schlaegergroesse;
             Ball.BackColor = farbeFuerAlles;
-            Schlaeger.BackColor = farbeFuerAlles;
-            Schlaeger.Left = 2;
-            zeichenSchlaeger((spielfeldMaxY / 2) - (schlaegergroesse / 2));
+            
+            zeichenSchlaeger1((spielfeldMaxY / 2) - (schlaegergroesse / 2));
+            if (multiplayer == true)
+            {
+                zeichenSchlaeger2((spielfeldMaxY / 2) - (schlaegergroesse / 2));
+            }
             zeichneBall(new Point(spielfeldMinX, spielfeldMaxY / 2));
         }
 
@@ -218,7 +259,7 @@ namespace Pong
                 return;
 
             if (e.Button == MouseButtons.Left)
-                zeichenSchlaeger(e.Y + Schlaeger.Top);
+                zeichenSchlaeger1(e.Y + Schlaeger.Top);
         }
 
         void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -226,24 +267,27 @@ namespace Pong
             if (spielPause == true)
                 return;
 
-            if (e.KeyData == Keys.W)
+            if (multiplayer == true)
             {
-                zeichenSchlaeger(Schlaeger.Top - 5);
-                zeichenSchlaeger(Schlaeger.Top - 5);
-                zeichenSchlaeger(Schlaeger.Top - 5);
-                zeichenSchlaeger(Schlaeger.Top - 5);
-                zeichenSchlaeger(Schlaeger.Top - 5);
-                zeichenSchlaeger(Schlaeger.Top - 5);
-            }
+                if (e.KeyData == Keys.W)
+                {
+                    zeichenSchlaeger2(Schlaeger2.Top - 5);
+                    zeichenSchlaeger2(Schlaeger2.Top - 5);
+                    zeichenSchlaeger2(Schlaeger2.Top - 5);
+                    zeichenSchlaeger2(Schlaeger2.Top - 5);
+                    zeichenSchlaeger2(Schlaeger2.Top - 5);
+                    zeichenSchlaeger2(Schlaeger2.Top - 5);
+                }
 
-            if (e.KeyData == Keys.S)
-            {
-                zeichenSchlaeger(Schlaeger.Top + 5);
-                zeichenSchlaeger(Schlaeger.Top + 5);
-                zeichenSchlaeger(Schlaeger.Top + 5);
-                zeichenSchlaeger(Schlaeger.Top + 5);
-                zeichenSchlaeger(Schlaeger.Top + 5);
-                zeichenSchlaeger(Schlaeger.Top + 5);
+                if (e.KeyData == Keys.S)
+                {
+                    zeichenSchlaeger2(Schlaeger2.Top + 5);
+                    zeichenSchlaeger2(Schlaeger2.Top + 5);
+                    zeichenSchlaeger2(Schlaeger2.Top + 5);
+                    zeichenSchlaeger2(Schlaeger2.Top + 5);
+                    zeichenSchlaeger2(Schlaeger2.Top + 5);
+                    zeichenSchlaeger2(Schlaeger2.Top + 5);
+                }
             }
         }
 
@@ -454,8 +498,7 @@ namespace Pong
             neueWerte.Checked(xmlBreite);
 
             if (neueWerte.ShowDialog() == DialogResult.OK)
-            {
-                
+            {                
                 neueGroesse = neueWerte.LiefereWerte();
                 tempBack = neueWerte.LiefereFarbe1();
                 tempRest = neueWerte.LiefereFarbe2();
@@ -538,23 +581,28 @@ namespace Pong
                 case 1:
                     veryEasyToolStripMenuItem_Click(this, null);
                     break;
-
                 case 2:
                     easyToolStripMenuItem_Click(this, null);
                     break;
-
                 case 3:
                     normiToolStripMenuItem_Click(this, null);
                     break;
-
                 case 4:
                     hardToolStripMenuItem_Click(this, null);
                     break;
-
                 case 5:
                     painInTheAssToolStripMenuItem_Click(this, null);
                     break;
             }
+        }
+
+        private void radioButtonMultiplayer_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonMultiplayer.Checked == true)
+                multiplayer = true;
+
+            if (radioButtonMultiplayer.Checked == false)
+                multiplayer = true;
         }
 
         private void schreibeEinstellungen(object sender, FormClosedEventArgs e)
@@ -617,19 +665,15 @@ namespace Pong
                 case 1:
                     veryEasyToolStripMenuItem_Click(this, null);
                     break;
-
                 case 2:
                     easyToolStripMenuItem_Click(this, null);
                     break;
-
                 case 3:
                     normiToolStripMenuItem_Click(this, null);
                     break;
-
                 case 4:
                     hardToolStripMenuItem_Click(this, null);
                     break;
-
                 case 5:
                     painInTheAssToolStripMenuItem_Click(this, null);
                     break;
