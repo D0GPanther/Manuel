@@ -1,4 +1,15 @@
-﻿using System;
+﻿/*
+    Aufgabenliste:
+    -Nach fehler, Ball in Mitte des zugehörigen Schlägers und auf Konpfdruck los.
+    -Punkteanzeige für Spielmodus
+    -Hauptmenü bei Start----Dafür noch optionen einbauen
+    
+
+    Bugs:
+    -Nach Fehler bei Player2 immer folge fehler bei player1
+    -player 2 erst nach drücken arrowdown bewegbar über w,s
+*/
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -51,13 +62,14 @@ namespace Pong
         {
             InitializeComponent();
             Password passwort = new Password();
+            MainMenu menu = new MainMenu();
             spielfeldLinienBreite = 10;
             balllPosition.richtungX = true;
             balllPosition.richtungY = true;
             balllPosition.winkel = 0;
             punkteMehr = 1;
             punkteWeniger = -5;
-            winkelZufall = 3;
+            winkelZufall = 1;
             multiplayer = false;
 
             xmlDateiname = System.IO.Path.ChangeExtension(Application.ExecutablePath, ".xml");
@@ -68,7 +80,7 @@ namespace Pong
             spielzeit = 120;
             comboBox1.SelectedIndex = 3;
             farbeHintergrund = Color.Black;
-            farbeFuerAlles = Color.White;
+            farbeFuerAlles = Color.White;            
 
             leseReg();
             this.Height = xmlHoehe;
@@ -89,8 +101,11 @@ namespace Pong
             timerSpielZeit.Enabled = false;
             schrift = new Font("Arial", 12, FontStyle.Bold);
             pauseToolStripMenuItem.Enabled = true;
-            spielfeldToolStripMenuItem_Click(sender, null);
+
             passwort.ShowDialog();
+            menu.ShowDialog();
+            multiplayer = menu.Multi_Player();
+            spielfeldToolStripMenuItem_Click(sender, null);
         }
 
         void setzeSpielfeld()
@@ -107,9 +122,11 @@ namespace Pong
         void zeichneSpielfeld()
         {
             pinsel.Color = farbeFuerAlles;
-            zeichenflaeche.FillRectangle(pinsel, 0, 0, (spielfeldMaxX+2), spielfeldLinienBreite);
-            zeichenflaeche.FillRectangle(pinsel, spielfeldMaxX, 0, (spielfeldLinienBreite), spielfeldMaxY + spielfeldLinienBreite);
+            zeichenflaeche.FillRectangle(pinsel, 0, 0, (spielfeldMaxX+2), spielfeldLinienBreite);            
             zeichenflaeche.FillRectangle(pinsel, 0, spielfeldMaxY, (spielfeldMaxX+2), spielfeldLinienBreite);
+
+            //zeichenflaeche.FillRectangle(pinsel, spielfeldMaxX, 0, (spielfeldLinienBreite), spielfeldMaxY + spielfeldLinienBreite);
+            
 
             pinsel.Color = Color.DarkSlateGray;
             zeichenflaeche.FillRectangle(pinsel, spielfeldMaxX / 2, spielfeldMinY, spielfeldLinienBreite, spielfeldMaxY - spielfeldLinienBreite);
@@ -130,6 +147,7 @@ namespace Pong
                 balllPosition.richtungY = false;
 
             Random zufall = new Random();
+            
 
             if ((position.X == spielfeldMinX) && ((Schlaeger.Top <= position.Y) && (Schlaeger.Bottom >= position.Y)))
             {
@@ -153,18 +171,20 @@ namespace Pong
 
             if (position.X < spielfeldMinX)
             {
-                zeichnePunkte(Convert.ToString(spielpunkte.VeraenderePunkte(punkteWeniger)));
+                //zeichnePunkte(Convert.ToString(spielpunkte.VeraenderePunkte(punkteWeniger)));
                 System.Threading.Thread.Sleep(500);
                 zeichneBall(new Point(spielfeldMinX, position.Y));
                 balllPosition.richtungX = true;
             }
-
-            if (position.X > spielfeldMaxX)
+            if (multiplayer == true)
             {
-                zeichnePunkte(Convert.ToString(spielpunkte.VeraenderePunkte(punkteWeniger)));
-                System.Threading.Thread.Sleep(500);
-                zeichneBall(new Point(spielfeldMaxX, position.Y));
-                balllPosition.richtungX = false;
+                if (position.X > spielfeldMaxX)
+                {
+                    //zeichnePunkte(Convert.ToString(spielpunkte.VeraenderePunkte(punkteWeniger)));
+                    System.Threading.Thread.Sleep(500);
+                    zeichneBall(new Point(spielfeldMaxX, position.Y));
+                    balllPosition.richtungX = false;
+                }
             }
         }
 
@@ -184,7 +204,7 @@ namespace Pong
             Schlaeger2.Width = spielfeldLinienBreite;
             Schlaeger2.Height = schlaegergroesse;
             Schlaeger2.BackColor = farbeFuerAlles;
-            Schlaeger2.Left = (spielfeldMaxX)-10;
+            Schlaeger2.Left = (spielfeldMaxX);
 
             if (((Y + schlaegergroesse) < spielfeldMaxY) && (Y > spielfeldMinY))
                 Schlaeger2.Top = Y;
@@ -267,27 +287,25 @@ namespace Pong
             if (spielPause == true)
                 return;
 
-            if (multiplayer == true)
+            
+            if (e.KeyData == Keys.W)
             {
-                if (e.KeyData == Keys.W)
-                {
-                    zeichenSchlaeger2(Schlaeger2.Top - 5);
-                    zeichenSchlaeger2(Schlaeger2.Top - 5);
-                    zeichenSchlaeger2(Schlaeger2.Top - 5);
-                    zeichenSchlaeger2(Schlaeger2.Top - 5);
-                    zeichenSchlaeger2(Schlaeger2.Top - 5);
-                    zeichenSchlaeger2(Schlaeger2.Top - 5);
-                }
+                zeichenSchlaeger2(Schlaeger2.Top - 5);
+                zeichenSchlaeger2(Schlaeger2.Top - 5);
+                zeichenSchlaeger2(Schlaeger2.Top - 5);
+                zeichenSchlaeger2(Schlaeger2.Top - 5);
+                zeichenSchlaeger2(Schlaeger2.Top - 5);
+                zeichenSchlaeger2(Schlaeger2.Top - 5);
+            }
 
-                if (e.KeyData == Keys.S)
-                {
-                    zeichenSchlaeger2(Schlaeger2.Top + 5);
-                    zeichenSchlaeger2(Schlaeger2.Top + 5);
-                    zeichenSchlaeger2(Schlaeger2.Top + 5);
-                    zeichenSchlaeger2(Schlaeger2.Top + 5);
-                    zeichenSchlaeger2(Schlaeger2.Top + 5);
-                    zeichenSchlaeger2(Schlaeger2.Top + 5);
-                }
+            if (e.KeyData == Keys.S)
+            {
+                zeichenSchlaeger2(Schlaeger2.Top + 5);
+                zeichenSchlaeger2(Schlaeger2.Top + 5);
+                zeichenSchlaeger2(Schlaeger2.Top + 5);
+                zeichenSchlaeger2(Schlaeger2.Top + 5);
+                zeichenSchlaeger2(Schlaeger2.Top + 5);
+                zeichenSchlaeger2(Schlaeger2.Top + 5);                
             }
         }
 
@@ -296,10 +314,11 @@ namespace Pong
         void timer1_Tick(object sender, EventArgs e)
         {
             int neuX = 0, neuY = 0;
+
             if (balllPosition.richtungX == true)
-                neuX = Ball.Left + 10;
+                neuX = Ball.Left + 5;
             else
-                neuX = Ball.Left - 10;
+                neuX = Ball.Left - 5;
 
             if (balllPosition.richtungY == true)
                 neuY = Ball.Top - balllPosition.winkel;
@@ -594,15 +613,6 @@ namespace Pong
                     painInTheAssToolStripMenuItem_Click(this, null);
                     break;
             }
-        }
-
-        private void radioButtonMultiplayer_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButtonMultiplayer.Checked == true)
-                multiplayer = true;
-
-            if (radioButtonMultiplayer.Checked == false)
-                multiplayer = true;
         }
 
         private void schreibeEinstellungen(object sender, FormClosedEventArgs e)

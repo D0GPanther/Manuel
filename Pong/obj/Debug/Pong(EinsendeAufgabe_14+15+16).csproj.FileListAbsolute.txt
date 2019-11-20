@@ -20,3 +20,4 @@ C:\Shared\ILS_Hefte\Pong\obj\Debug\Pong(EinsendeAufgabe_14+15+16).csprojAssembly
 C:\Shared\ILS_Hefte\Pong\obj\Debug\Pong.Form3.resources
 C:\Shared\ILS_Hefte\Pong\obj\Debug\Pong.Password.resources
 C:\Shared\ILS_Hefte\Pong\obj\Debug\Pong.Registrieren.resources
+C:\Shared\ILS_Hefte\Pong\obj\Debug\Pong.MainMenu.resources

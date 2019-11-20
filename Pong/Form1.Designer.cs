@@ -55,7 +55,6 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Schlaeger2 = new System.Windows.Forms.Panel();
-            this.radioButtonMultiplayer = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             this.panelFeld.SuspendLayout();
             this.SuspendLayout();
@@ -279,24 +278,11 @@
             this.Schlaeger2.Size = new System.Drawing.Size(14, 206);
             this.Schlaeger2.TabIndex = 2;
             // 
-            // radioButtonMultiplayer
-            // 
-            this.radioButtonMultiplayer.AutoSize = true;
-            this.radioButtonMultiplayer.Location = new System.Drawing.Point(344, 4);
-            this.radioButtonMultiplayer.Name = "radioButtonMultiplayer";
-            this.radioButtonMultiplayer.Size = new System.Drawing.Size(75, 17);
-            this.radioButtonMultiplayer.TabIndex = 5;
-            this.radioButtonMultiplayer.TabStop = true;
-            this.radioButtonMultiplayer.Text = "Multiplayer";
-            this.radioButtonMultiplayer.UseVisualStyleBackColor = true;
-            this.radioButtonMultiplayer.CheckedChanged += new System.EventHandler(this.radioButtonMultiplayer_CheckedChanged);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 441);
-            this.Controls.Add(this.radioButtonMultiplayer);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.splitter1);
@@ -347,6 +333,5 @@
         private System.Windows.Forms.ToolStripMenuItem schummelnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bestenlisteDruckenToolStripMenuItem;
         private System.Windows.Forms.Panel Schlaeger2;
-        private System.Windows.Forms.RadioButton radioButtonMultiplayer;
     }
 }
